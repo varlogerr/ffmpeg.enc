@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+if [[ -n "${MKDIR_FAILS+x}" ]]; then
+  exit 1
+fi
+
+echo "mkdir ${@}"

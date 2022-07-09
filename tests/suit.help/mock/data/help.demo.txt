@@ -1,0 +1,17 @@
+DEMO
+====
+```sh
+# generate conffile to stdout
+{TOOL} {genconf1}
+
+# generate `screen720p` preset conffile to stdout
+{TOOL} {genconf1} screen720p
+
+# `./vid.mp4` to `./enc.mkv` with default
+# settings and with `screen720p` preset
+{TOOL} vid.mp4 enc.mkv
+{TOOL} vid.mp4 enc720p.mkv {preset1} screen720p
+
+# all vids from `./vids` to `./enc/<vid-name>.mkv`
+{TOOL} ./vids ./enc
+```

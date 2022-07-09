@@ -1,0 +1,12 @@
+OPTIONS
+=======
+{endopt}              End of options
+{preset}    Encoding preset, see PRESETS section
+{conffile}  Use configuration file
+{genconf}       Generate conffile
+{help}  (flag) Print full help
+{usage}         (flag) Print usage help
+{opts}   (flag) Print options help
+{presets}       (flag) Print presets help
+{demo}          (flag) Print demo help
+{version}   (flag) Print version

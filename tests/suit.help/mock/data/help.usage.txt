@@ -1,0 +1,15 @@
+USAGE
+=====
+```sh
+# encode:
+{TOOL} SOURCE DEST [{preset1} PRESET] [{conffile1} CONFFILE...]
+
+# view encoding settings (base and for preset):
+{TOOL} {genconf1} [PRESET]
+
+# info options:
+{TOOL} {help1}|{usage1}|{opts1}|{presets1}|{demo1}
+
+# version:
+{TOOL} {version1}
+```

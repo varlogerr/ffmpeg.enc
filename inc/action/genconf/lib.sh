@@ -1,0 +1,1 @@
+. "${KEEPER[commondir]}/conffile.sh"

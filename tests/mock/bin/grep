@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+# for not installed test
+if [[ (-n "${GREP_MOCK+x}" && "${1}" == "--version") ]]; then
+  exit 1
+fi
+
+PATH="${PATH_ORIGIN}"
+grep "${@}"
