@@ -40,10 +40,12 @@ for f in -vid.txt --vid.txt; do
     "Fail on \`-\` prefixed SOURCE: ${f}"
 done
 
-exp_out="Can't create destination directory $(dirname ${MOCKDEST_FILE})"
-act_out="$(MKDIR_FAILS='' ${TOOL} "${MOCKSRC_FILE}" "${MOCKDEST_FILE}")"
-assert_result "${RC_OK}" "$?" "${exp_out}" "${act_out}" \
-  "Pinrt error on can't create destination directory"
+exp_out="=============="
+exp_out+=$'\n'"Error creating destination directories:"
+exp_out+=$'\n'"* $(dirname ${MOCKDEST_FILE})"
+act_out="$(MKDIR_FAILS='' ${TOOL} "${MOCKSRC_FILE}" "${MOCKDEST_FILE}" 2>&1)"
+assert_result "${RC_ERR}" "$?" "${exp_out}" "${act_out}" \
+  "Fail on error creating directories"
 
 set_enc_opts ENC_OPTS
 exp_out="$(mk_enc_cmd ENC_OPTS "${MOCKSRC_FILE}" "${MOCKDEST_FILE}")"

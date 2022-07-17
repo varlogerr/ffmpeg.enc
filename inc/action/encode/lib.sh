@@ -50,7 +50,7 @@ srcdir_to_files() {
   local dir="${1}"
   local files
 
-  files="$( find "${dir}" -type f \
+  files="$( find "${dir}" -type f | sort -n \
     | while read -r f; do
       [[ -z "${f}" ]] && continue
 
@@ -76,7 +76,7 @@ srcdir_to_destfiles() {
     filename="$(basename -- "${f}")"
     grep -q '\.' <<< "${filename}" \
       && filename="${filename%.*}"
-    realpath -m "${destdir}/${dir_prefix}/${filename}.mkv"
+    realpath -m -q "${destdir}/${dir_prefix}/${filename}.mkv"
   done <<< "${srcfiles}" )"
 
   RETVAL="${destfiles}"

@@ -52,6 +52,7 @@ vencoder.sh -h
     [-p PRESET] [-f CONFFILE...] - <<< "SOURCELIST"
   ```
 * Think of merging PRESET and CONFFILE under one flag
+* Extend base preset settings
 
 [To top]
 

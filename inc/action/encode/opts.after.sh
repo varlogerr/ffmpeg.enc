@@ -1,8 +1,6 @@
 __opts_preproc() {
   unset __opts_preproc
 
-  local src_before_dir
-
   # validate source file is provided, exists and of the correct mime
   if [[ -z "${OPTS[src]}" ]]; then
     ERRBAG+=("SOURCE is required")
@@ -16,7 +14,7 @@ __opts_preproc() {
         [[ "${mime}" =~ ^video\/.* ]] \
           || ERRBAG+=("Unsupported '${mime}' mime for SOURCE: ${OPTS[src]}")
       elif [[ -d "${OPTS[src]}" ]]; then
-        src_before_dir="${OPTS[src]}"
+        OPTS[src_basedir]="${OPTS[src]}"
         srcdir_to_files "${OPTS[src]}" > /dev/null
         OPTS[src]="${RETVAL}"
       else
@@ -28,15 +26,16 @@ __opts_preproc() {
   if [[ -z "${OPTS[dest]}" ]]; then
     ERRBAG+=("DEST is required")
   else
-    OPTS[dest]="$(realpath -m -- "${OPTS[dest]}")"
+    OPTS[dest]="$(realpath -q -m -- "${OPTS[dest]}")"
 
-    if [[ -n "${src_before_dir}" ]]; then
+    if [[ -n "${OPTS[src_basedir]}" ]]; then
       if [[ -f "${OPTS[dest]}" ]]; then
-        ERRBAG+=("Can't encode SOURCE directory to DEST file: ${src_before_dir} -> ${OPTS[dest]}")
+        ERRBAG+=("Can't encode SOURCE directory to DEST file: ${OPTS[src_basedir]} -> ${OPTS[dest]}")
       elif [[ (-e "${OPTS[dest]}" && ! -d "${OPTS[dest]}") ]]; then
         ERRBAG+=("Unsupported DEST: ${OPTS[dest]}")
       else
-        srcdir_to_destfiles "${src_before_dir}" \
+        OPTS[dest_basedir]="${OPTS[dest]}"
+        srcdir_to_destfiles "${OPTS[src_basedir]}" \
           "${OPTS[src]}" "${OPTS[dest]}" > /dev/null
         OPTS[dest]="${RETVAL}"
         while read -r f; do
@@ -51,6 +50,21 @@ __opts_preproc() {
     fi
   fi
 
+  [[ ${#ERRBAG[@]} -gt 0 ]] && return 1
+
+  OPTS[src]="$( while read -r f; do
+    [[ -z "${f}" ]] && continue
+    realpath -q -m -- "${f}"
+  done <<< "${OPTS[src]}" )"
+  OPTS[dest]="$( while read -r f; do
+    [[ -z "${f}" ]] && continue
+    realpath -q -m -- "${f}"
+  done <<< "${OPTS[dest]}")"
+} && __opts_preproc
+
+__opts_preproc_confs() {
+  unset __opts_preproc_confs
+
   # validate preset value
   [[ -n "${OPTS[preset]}" ]] && {
     if grep -qFx "${OPTS[preset]}" <<< "${KEEPER[presets]}"; then
@@ -59,15 +73,32 @@ __opts_preproc() {
       ERRBAG+=("Invalid PRESET: ${OPTS[preset]}")
     fi
   }
+} && __opts_preproc_confs
 
-  [[ ${#ERRBAG[@]} -gt 0 ]] && return 1
+__opts_preproc_hooks() {
+  unset __opts_preproc_hooks
 
-  OPTS[src]="$( while read -r f; do
-    [[ -z "${f}" ]] && continue
-    realpath -- "${f}"
-  done <<< "${OPTS[src]}" )"
-  OPTS[dest]="$( while read -r f; do
-    [[ -z "${f}" ]] && continue
-    realpath -q -m -- "${f}"
-  done <<< "${OPTS[dest]}")"
-} && __opts_preproc
+  local before
+  local after
+
+  [[ -n "${OPTS[before]}" ]] && while read -r b; do
+    b="$(realpath -m -q -- "${b}")"
+    [[ ! -f "${b}" ]] && {
+      ERRBAG+=("Unreachable BEFORE hook: ${b}")
+      continue
+    }
+    before+="${before:+$'\n'}${b}"
+  done <<< "${OPTS[before]}"
+
+  [[ -n "${OPTS[after]}" ]] && while read -r a; do
+    a="$(realpath -m -q -- "${a}")"
+    [[ ! -f "${a}" ]] && {
+      ERRBAG+=("Unreachable AFTER hook: ${a}")
+      continue
+    }
+    after+="${after:+$'\n'}${a}"
+  done <<< "${OPTS[after]}"
+
+  OPTS[before]="${before}"
+  OPTS[after]="${after}"
+} && __opts_preproc_hooks

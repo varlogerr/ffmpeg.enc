@@ -1,8 +1,12 @@
 OPTS+=(
   [src]=
+  [src_basedir]=
   [dest]=
+  [dest_basedir]=
   [preset]=
   [conffiles]=
+  [before]=
+  [after]=
 )
 
 __opts_detect() {
@@ -22,6 +26,8 @@ __opts_detect() {
       --            ) stopopt=1 ;;
       -p|--preset   ) shift; OPTS[preset]="${1}" ;;
       -f|--conffile ) shift; OPTS[conffiles]+="${OPTS[conffiles]:+$'\n'}${1}" ;;
+      --before      ) shift; OPTS[before]+="${OPTS[before]:+$'\n'}${1}" ;;
+      --after       ) shift; OPTS[after]+="${OPTS[after]:+$'\n'}${1}" ;;
       -*            ) ERRBAG+=("Invalid option: ${1}") ;;
       *             ) files+=("${1}") ;;
     esac

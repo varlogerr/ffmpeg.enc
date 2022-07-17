@@ -1,3 +1,9 @@
+# Usage:
+# ```
+# PREENC_TXT="OPTIONAL PREENC TEXT"
+# POSTENC_TXT="OPTIONAL POSTENC TEXT"
+# mk_enc_cmd OPTS_VAR "SOURCE_FILE" "DEST_FILE"
+# ```
 mk_enc_cmd() {
   declare -n opts_in="${1}"
   local src="${2}"
@@ -6,8 +12,11 @@ mk_enc_cmd() {
     -c:v libx264 {scale_opts} -refs:v {ref} \
     -bf:v {bframes} -b_strategy:v {b-adapt} -me_range:v {merange} \
     -me_method:v {me} -subq:v {subme} -crf:v {crf} -g:v {keyint} \
-    -keyint_min:v {min-keyint} -c:a libvorbis -q:a 0 -ac 1
+    -keyint_min:v {min-keyint} -c:a libvorbis -q:a 0 -ac 1 \
+    -hide_banner -nostats -map_metadata -1
   "
+  local preenc_txt="${PREENC_TXT}${PREENC_TXT+$'\n'}"
+  local postenc_txt="${POSTENC_TXT}${POSTENC_TXT+$'\n'}"
 
   for c in "${!opts_in[@]}"; do
     opts="$(sed "s/{${c}}/${opts_in[$c]}/g" <<< "${opts}")"
@@ -30,17 +39,20 @@ mk_enc_cmd() {
       grep -q '\.' <<< "${filename}" \
         && filename="${filename%.*}"
       sources+=("${f}")
-      dests+=("$(realpath -m "${dest}/${dir_prefix}/${filename}.mkv")")
-    done <<< "$(find "${src}" -type f)"
+      dests+=("$(realpath -q -m "${dest}/${dir_prefix}/${filename}.mkv")")
+    done <<< "$(find "${src}" -type f | sort -n)"
   } || {
     sources+=("${src}")
     dests+=("${dest}")
   }
 
   for ix in "${!sources[@]}"; do
-    echo "mkdir -p $(dirname -- "${dests[$ix]}")"
-    echo "Encoding: ${sources[$ix]} ..."
-    echo "ffmpeg -i ${sources[$ix]} ${opts} -hide_banner -nostats ${dests[$ix]}"
+    printf -- '%s\n%s%s\n%s\n%s' \
+      "mkdir -p $(dirname -- "${dests[$ix]}")" \
+      "${preenc_txt}" \
+      "Encoding: ${sources[$ix]} ..." \
+      "ffmpeg -i ${sources[$ix]} ${opts} ${dests[$ix]}" \
+      "${postenc_txt}"
   done
 }
 

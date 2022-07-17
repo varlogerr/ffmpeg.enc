@@ -2,7 +2,8 @@ USAGE
 =====
 ```sh
 # encode:
-{TOOL} SOURCE DEST [{preset1} PRESET] [{conffile1} CONFFILE...]
+{TOOL} SOURCE DEST [{preset1} PRESET] [{conffile1} CONFFILE...] \
+  [{before1} BEFORE_HOOK...] [{after1} AFTER_HOOK...]
 
 # view encoding settings (base and for preset):
 {TOOL} {genconf1} [PRESET]

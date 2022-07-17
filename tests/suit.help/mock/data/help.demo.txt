@@ -15,3 +15,23 @@ DEMO
 # all vids from `./vids` to `./enc/<vid-name>.mkv`
 {TOOL} ./vids ./enc
 ```
+
+Hooks are triggered for before or after encoding of
+each file. They are populated with variables:
+`SOURCE`, `DEST`, `SOURCE_BASEDIR` and `DEST_BASEDIR`
+
+```sh
+# create a hook
+{
+  echo '# you can do something useful with these vars'
+  echo 'echo "src file path: ${SOURCE}"'
+  echo 'echo "dest file path: ${DEST}"'
+  echo 'echo "src directory path: ${SOURCE_BASEDIR}"'
+  echo 'echo "dest directory path: ${DEST_BASEDIR}"'
+} > ./myhook.sh
+
+# will print paths before encoding
+vencoder.sh v.mp4 e.mkv --before ./myhook.sh
+# will print paths after encoding
+vencoder.sh v.mp4 e.mkv --after ./myhook.sh
+```

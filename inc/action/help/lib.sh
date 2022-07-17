@@ -26,7 +26,8 @@ print_help_usage() {
     =====
     \`\`\`sh
     # encode:
-    ${KEEPER[tool]} SOURCE DEST [-p PRESET] [-f CONFFILE...]
+    ${KEEPER[tool]} SOURCE DEST [-p PRESET] [-f CONFFILE...] \\
+   !  [--before BEFORE_HOOK...] [--after AFTER_HOOK...]
    !
     # view encoding settings (base and for preset):
     ${KEEPER[tool]} --genconf [PRESET]
@@ -55,6 +56,8 @@ print_help_opts() {
     --              End of options
     -p, --preset    Encoding preset, see PRESETS section
     -f, --conffile  Use configuration file
+    --before        Before encode video hook
+    --after         After encode video hook
     --genconf       Generate conffile
     -h, -?, --help  (flag) Print full help
     --usage         (flag) Print usage help
@@ -83,6 +86,26 @@ print_help_demo() {
     !
     # all vids from \`./vids\` to \`./enc/<vid-name>.mkv\`
     ${KEEPER[tool]} ./vids ./enc
+    \`\`\`
+    !
+    Hooks are triggered for before or after encoding of
+    each file. They are populated with variables:
+    \`SOURCE\`, \`DEST\`, \`SOURCE_BASEDIR\` and \`DEST_BASEDIR\`
+    !
+    \`\`\`sh
+    # create a hook
+    {
+   !  echo '# you can do something useful with these vars'
+   !  echo 'echo \"src file path: \${SOURCE}\"'
+   !  echo 'echo \"dest file path: \${DEST}\"'
+   !  echo 'echo \"src directory path: \${SOURCE_BASEDIR}\"'
+   !  echo 'echo \"dest directory path: \${DEST_BASEDIR}\"'
+    } > ./myhook.sh
+   !
+    # will print paths before encoding
+    ${KEEPER[tool]} v.mp4 e.mkv --before ./myhook.sh
+    # will print paths after encoding
+    ${KEEPER[tool]} v.mp4 e.mkv --after ./myhook.sh
     \`\`\`
   "
 }

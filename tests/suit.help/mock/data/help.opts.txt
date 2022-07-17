@@ -3,6 +3,8 @@ OPTIONS
 {endopt}              End of options
 {preset}    Encoding preset, see PRESETS section
 {conffile}  Use configuration file
+{before}        Before encode video hook
+{after}         After encode video hook
 {genconf}       Generate conffile
 {help}  (flag) Print full help
 {usage}         (flag) Print usage help
