@@ -4,7 +4,7 @@ declare RETVAL
 declare -a ERRBAG=()
 
 # don't modify manually
-declare TOOL_VERSION=v0.0.2
+declare TOOL_VERSION=v0.0.3
 
 declare -A KEEPER=(
   [tool]="$(basename "${BASH_SOURCE[0]}")"
