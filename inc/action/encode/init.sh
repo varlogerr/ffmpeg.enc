@@ -1,13 +1,6 @@
 declare -a INIT_PREREQ_CHECK_CMDS="
-  find --version
-  grep --version
-  head --version
-  realpath --version
-  rev --version
-  sed --version
-  sort --version
-  tail --version
-  tr --version
+  ffmpeg -version
+  file --version
 "
 
 _init_prereq() {

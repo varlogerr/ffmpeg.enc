@@ -5,6 +5,7 @@ while read -r f; do
   [[ -z "${f}" ]] && continue
   [[ -f "${KEEPER[actdir]}/${f}.sh" ]] && . "${KEEPER[actdir]}/${f}.sh"
 done <<< "
+  init
   lib
   opts
   opts.after
