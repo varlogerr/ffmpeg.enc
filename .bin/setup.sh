@@ -6,7 +6,5 @@ BINDIR="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
 
 declare -A VENDORS=()
 
-read_vendor_conf VENDORS "${UTILDIR}/.setup-dev.conf"
+read_vendor_conf VENDORS "${UTILDIR}/.setup.conf"
 install_vendors VENDORS "${VENDORDIR}"
-
-"${BINDIR}/setup-prod.sh"

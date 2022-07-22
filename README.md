@@ -31,7 +31,7 @@ vencoder.sh -h
 
 * checkout the code
 * (optional) add `.bin` directory to the `PATH`
-* run `.bin/setup-dev.sh` to install dev dependencies
+* run `.bin/setup.sh` to install dev dependencies
 * (optional) add `vendor/.bin` to the `PATH`
 * make changes
 * add / edit tests and run them with

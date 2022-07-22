@@ -1,1 +1,1 @@
-printf -- '%s\n' "${TOOL_VERSION}"
+cat "${KEEPER[tooldir]}/.version"
