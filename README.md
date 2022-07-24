@@ -29,16 +29,32 @@ vencoder.sh -h
 
 ## Development
 
-* checkout the code
-* (optional) add `.bin` directory to the `PATH`
-* run `.bin/setup.sh` to install dev dependencies
+* install dependencies
+
+  ```sh
+  git clone https://github.com/varlogerr/toolbox.sh.vendor.git ./vendor/vendor
+  cd ./vendor/vendor
+  git checkout <latest-tag>
+  cd -
+  # initialize the project
+  ./vendor/vendor/bin/vendor.sh --init .
+  # install dependencies. after initialization
+  # there will be only vendor itself as a dependency
+  ./vendor/vendor/bin/vendor.sh
+  ```
 * (optional) add `vendor/.bin` to the `PATH`
 * make changes
 * add / edit tests and run them with
   ```sh
-  vendor/.bin/tester.sh run
+  ./vendor/.bin/tester.sh run
   ```
-* when completed run `.bin/preprod.sh RELEASE_TYPE`, see `.bin/preprod.sh` to provoke an action and see a kind of help
+* when completed run
+
+  ```sh
+  # see release types
+  ./vendor/.bin/preprod.sh --help
+  ./vendor/.bin/preprod.sh RELEASE_TYPE
+  ```
 
 [To top]
 

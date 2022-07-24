@@ -11,7 +11,7 @@ KEEPER[tooldir]="$(realpath "${KEEPER[bindir]}/..")"
 KEEPER[vendordir]="${KEEPER[tooldir]}/vendor"
 KEEPER[incdir]="${KEEPER[tooldir]}/inc"
 
-. "${KEEPER[vendordir]}/.prod/sh.lib/sh.lib.sh"
+. "${KEEPER[vendordir]}/.lib/lib/lib/txt.sh"
 . "${KEEPER[incdir]}/init.sh"
 
 KEEPER+=(
